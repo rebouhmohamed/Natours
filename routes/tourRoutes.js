@@ -1,25 +1,5 @@
-const fs = require('fs');
 const express = require('express');
-const morgan = require('morgan');
-const { json } = require('express');
-const app = express();
-
-// 1) MIDLLEWARES
-
-app.use(morgan('dev'));
-app.use(express.json());
-app.use((req, res, next) => {
-  console.log('hello from the midlleware');
-  next();
-});
-app.use((req, res, next) => {
-  req.requestTime = new Date().toISOString();
-  next();
-});
-
 const tours = JSON.parse(fs.readFileSync('./dev-data/data/tours-simple.json'));
-
-// 2) ROUTE HANDLERS
 
 const getAlltours = (req, res) => {
   console.log(req.requestTime);
@@ -98,78 +78,17 @@ const deleteTour = (req, res) => {
   });
 };
 
-const getAllusers = (req, res) => {
-  res.status(500).
-    json({
-      status: 'error',
-      message: 'this route is not difined',
-    });
-};
+const Router = express.Router();
 
-const getUser = (req, res) => {
-  res.status(500).
-    json({
-      status: 'error',
-      message: 'this route is not difined',
-    });
-};
-
-const createUser = (req, res) => {
-  res.status(500).
-    json({
-      status: 'error',
-      message: 'this route is not difined',
-    });
-};
-
-const updateUser = (req, res) => {
-  res.status(500).
-    json({
-      status: 'error',
-      message: 'this route is not difined',
-    });
-};
-
-const deleteUser = (req, res) => {
-  res.status(500).
-    json({
-      status: 'error',
-      message: 'this route is not difined',
-    });
-};
-
-// 3) ROUTES
-const tourRouter = express.Router();
-const userRouter = express.Router();
-app.use('/api/v1/tours',tourRouter);
-app.use('/api/v1/users',userRouter);
-
-tourRouter
+Router
   .route('/')
   .get(getAlltours)
   .post(createTour);
 
-tourRouter
+Router
   .route('/:id')
   .get(getTour)
   .patch(updateTour)
   .delete(deleteTour);
 
-userRouter
-  .route('/')
-  .get(getAllusers)
-  .post(createUser);
-
-userRouter
-  .route('/:id')
-  .get(getUser)
-  .patch(updateUser)
-  .delete(deleteUser);
-
-
-
-// 4) START SERVER
-const port = 3000;
-app.listen(port, () => {
-  console.log(`app running on port ${port}...`);
-});
+module.exports = Router;
