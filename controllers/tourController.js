@@ -1,5 +1,5 @@
-const { fail } = require('assert');
 const fs = require('fs');
+
 const tours = JSON.parse(fs.readFileSync('./dev-data/data/tours-simple.json'));
 
 exports.checkID = (req, res, next, val) => {
@@ -19,7 +19,8 @@ exports.checkBody = (req, res, next) => {
       status: 'fail',
       message: 'missing name',
     });
-  } else if (!req.body.price) {
+  }
+  if (!req.body.price) {
     return res.status(400).json({
       status: 'fail',
       message: 'missing price',
@@ -54,7 +55,7 @@ exports.getTour = (req, res) => {
 
 exports.createTour = (req, res) => {
   const newID = tours[tours.length - 1].id + 1;
-  const newtour = Object.assign({ id: newID }, req.body);
+  const newtour = { id: newID, ...req.body };
   tours.push(newtour);
 
   fs.writeFile(
