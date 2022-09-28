@@ -6,7 +6,7 @@ Router.param('id',tourController.checkID);
 Router
   .route('/')
   .get(tourController.getAlltours)
-  .post(tourController.createTour);
+  .post(tourController.checkBody, tourController.createTour);
 
 Router
   .route('/:id')

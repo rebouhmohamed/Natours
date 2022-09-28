@@ -1,3 +1,4 @@
+const { fail } = require('assert');
 const fs = require('fs');
 const tours = JSON.parse(fs.readFileSync('./dev-data/data/tours-simple.json'));
 
@@ -7,6 +8,21 @@ exports.checkID = (req, res, next, val) => {
     return res.status(404).json({
       status: 'fail',
       message: 'invalid ID',
+    });
+  }
+  next();
+};
+
+exports.checkBody = (req, res, next) => {
+  if (!req.body.name) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'missing name',
+    });
+  } else if (!req.body.price) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'missing price',
     });
   }
   next();
