@@ -4,7 +4,7 @@
   "description": "node,express and mongoDB",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon server.js"
   },
   "author": "Mohamed Rabouh",
   "license": "ISC",
