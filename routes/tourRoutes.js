@@ -1,16 +1,16 @@
+/* eslint-disable prettier/prettier */
 const express = require('express');
-const tourController = require('./../controllers/tourController');
+const tourController = require('../controllers/tourController');
+
 const Router = express.Router();
 
-Router.param('id',tourController.checkID);
+Router.param('id', tourController.checkID);
 
-Router
-  .route('/')
+Router.route('/')
   .get(tourController.getAlltours)
   .post(tourController.checkBody, tourController.createTour);
 
-Router
-  .route('/:id')
+Router.route('/:id')
   .get(tourController.getTour)
   .patch(tourController.updateTour)
   .delete(tourController.deleteTour);
