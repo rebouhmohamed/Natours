@@ -1,19 +1,31 @@
 {
   "name": "natours",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=8.3.0"
+  },
   "description": "node,express and mongoDB",
   "main": "app.js",
   "scripts": {
     "start": "nodemon server.js",
-    "start:prod": "NODE_ENV=production nodemon server.js"
+    "start:prod": "NODE_ENV=production nodemon server.js",
+    "debug": "ndb server.js"
   },
   "author": "Mohamed Rabouh",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "dotenv": "^16.0.2",
-    "express": "^4.18.1",
+    "express": "^4.18.2",
+    "json": "^11.0.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.15",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.8.0",
+    "slugify": "^1.6.5",
+    "token": "^0.1.0",
+    "validator": "^13.7.0",
+    "web": "^0.0.2"
   },
   "devDependencies": {
     "eslint": "^8.24.0",
