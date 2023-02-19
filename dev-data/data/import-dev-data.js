@@ -1,7 +1,7 @@
 const fs = require('fs');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const Tour = require('./../../models/tourModel');
+const Tour = require('../../models/tourModel');
 
 dotenv.config({ path: './config.env' });
 
@@ -15,14 +15,13 @@ mongoose
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
+    useUnifiedTopology: true,
   })
   .then(() => {
     console.log('DB connection succeful !');
   });
 //reading the file
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
-);
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
 // importing data
 const importData = async () => {
   try {
@@ -38,7 +37,6 @@ const deleteData = async () => {
   try {
     await Tour.deleteMany();
     console.log('data deleted successfullt');
-    
   } catch (err) {
     console.log(err);
   }

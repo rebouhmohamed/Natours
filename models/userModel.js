@@ -46,6 +46,7 @@ const userschema = new mongoose.Schema({
   passwordResetExpires: Date,
   active: {
     type: Boolean,
+
     default: true,
     select: false,
   },
@@ -53,6 +54,7 @@ const userschema = new mongoose.Schema({
 userschema.pre('save', function (next) {
   if (!this.isModified('password') || this.isNew) return next();
   this.passwordChangedAt = Date.now - 5000;
+  next();
 });
 userschema.pre('save', async function (next) {
   //only run this function if password was actually modified
@@ -97,5 +99,5 @@ userschema.methods.correctPasswordResetToken = function () {
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
   return resetToken;
 };
-const User = mongoose.model('user', userschema);
+const User = mongoose.model('User', userschema);
 module.exports = User;

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+//const User = require('./userModel');
 //const validator = require('validator');
 
 const tourschema = new mongoose.Schema(
@@ -77,6 +78,33 @@ const tourschema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    startLocation: {
+      type: {
+        type: String,
+        default: 'point',
+      },
+      coordinates: [Number],
+      adress: String,
+      description: String,
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: 'point',
+        },
+        coordinates: [Number],
+        adress: String,
+        description: String,
+        day: Number,
+      },
+    ],
+    guides: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
@@ -89,12 +117,22 @@ tourschema.virtual('durationWeeks').get(function () {
 tourschema.virtual('durationHours').get(function () {
   return this.duration * 24;
 });
+tourschema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id',
+});
 
 // DOCUMENT MIDDLEWARE: runs before .save() and .create() bot not .insertMAny()
 tourschema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
+
+// tourschema.pre('save', async function (next) {
+//   const guidesPromises = this.guides.map(async (id) => await User.findById(id));
+//   this.guides = await Promise.all(guidesPromises);
+// });
 // tourschema.pre('save', function (next) {
 //   console.log('will save document...');
 //   next();
@@ -109,6 +147,15 @@ tourschema.pre(/^find/, function (next) {
   this.start = Date.now();
   next();
 });
+
+tourschema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt',
+  });
+  next();
+});
+
 tourschema.post(/^find/, function (docs, next) {
   console.log(`Query took ${Date.now() - this.start}ms`);
   next();
@@ -119,5 +166,5 @@ tourschema.pre('aggregate', function (next) {
   next();
 });
 
-const Tour = mongoose.model('tour', tourschema);
+const Tour = mongoose.model('Tour', tourschema);
 module.exports = Tour;

@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const catchasync = require('../Utils/catchAsync');
 const AppError = require('../Utils/appError');
+const factory = require('./HandlerFactory');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -9,19 +10,6 @@ const filterObj = (obj, ...allowedFields) => {
   });
   return newObj;
 };
-
-exports.getAllusers = catchasync(async (req, res, next) => {
-  const users = await User.find();
-
-  //SEND RESPONCES
-  res.status(200).json({
-    status: 'succes',
-    results: users.length,
-    data: {
-      users,
-    },
-  });
-});
 
 exports.updateMe = catchasync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
@@ -55,30 +43,14 @@ exports.deleteMe = catchasync(async (req, res, next) => {
   });
 });
 
-exports.getUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'this route is not difined',
-  });
-};
+exports.getUser = factory.GetOne(User);
 
 exports.createUser = (req, res) => {
   res.status(500).json({
     status: 'error',
-    message: 'this route is not difined',
+    message: 'this route is not difined / signup instead',
   });
 };
-
-exports.updateUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'this route is not difined',
-  });
-};
-
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'this route is not difined',
-  });
-};
+exports.getAllusers = factory.GetAll(User);
+exports.updateUser = factory.UpdateOne(User);
+exports.deleteUser = factory.DeleteOne(User);
