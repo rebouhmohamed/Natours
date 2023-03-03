@@ -35,6 +35,7 @@ const tourschema = new mongoose.Schema(
       default: 4.5,
       max: [5, 'rating can not be more than 5'],
       min: [1, 'rating can not be less than 1'],
+      set: (val) => Math.round(val * 10) / 10,
     },
     ratingsQuantity: {
       type: Number,
@@ -111,6 +112,10 @@ const tourschema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+//tourschema.index({ price: 1 });
+tourschema.index({ price: 1, ratingsAverage: -1 });
+tourschema.index({ slug: 1 });
+tourschema.index({ startLocation: '2dsphere' });
 tourschema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
@@ -160,11 +165,11 @@ tourschema.post(/^find/, function (docs, next) {
   console.log(`Query took ${Date.now() - this.start}ms`);
   next();
 });
-tourschema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { secrettour: { $ne: true } } });
-  console.log(this.pipeline());
-  next();
-});
+// tourschema.pre('aggregate', function (next) {
+//   this.pipeline().unshift({ $match: { secrettour: { $ne: true } } });
+//   console.log(this.pipeline());
+//   next();
+// });
 
 const Tour = mongoose.model('Tour', tourschema);
 module.exports = Tour;
